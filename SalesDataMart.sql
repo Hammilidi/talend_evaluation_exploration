@@ -1,9 +1,6 @@
 CREATE DATABASE SalesDataMart;
-CREATE DATABASE InventoryDataMart;
 
 USE SprintTalendDW;
-USE SalesDataMart;
-USE InventoryDataMart;
 ------------------------------------------------------------------------------
 --SalesDataMart
 SELECT * INTO SalesDataMart.dbo.S_Dates
@@ -19,6 +16,19 @@ FROM DimCustomers;
 SELECT * INTO SalesDataMart.dbo.S_Fact_Sales 
 FROM Fact_Sales;
 
+
+
+---En cas d'erreurs, exécuter ce code avant de réexécuter celui ci-dessus en raison des contraintes
+--USE InventoryDataMart
+
+--DROP TABLE S_Dates;
+--DROP TABLE S_Customers;
+--DROP TABLE S_Products;
+--DROP TABLE S_Fact_Sales;
+
+
+
+USE SalesDataMart;
 
 --Définition des contraintes dans SalesDataMart
 --Clés Primaires
@@ -46,41 +56,10 @@ ADD CONSTRAINT FK_SalesProduct FOREIGN KEY (ProductID) REFERENCES S_Products(Pro
 
 
 
----------------------------------------------------------------------------------
-SELECT * INTO InventoryDataMart.dbo.I_Dates 
-FROM DimDates;
-
-SELECT * INTO InventoryDataMart.dbo.I_Products 
-FROM DimProducts;
-
-SELECT SupplierID, SupplierName, SupplierLocation INTO InventoryDataMart.dbo.I_Suppliers
-FROM DimSuppliers;
-
-SELECT * INTO InventoryDataMart.dbo.I_Fact_Inventory 
-FROM Fact_Inventory;
+--Optimisations
+--Indexation
 
 
---Définition des contraintes dans le datamart InventoryDataMart
---Clés Primaires
-ALTER TABLE I_Dates
-ADD PRIMARY KEY (DateID);
 
-ALTER TABLE I_Products
-ADD PRIMARY KEY (ProductID);
-
-ALTER TABLE I_Suppliers
-ADD PRIMARY KEY (SupplierID);
-
-ALTER TABLE I_Fact_Inventory 
-ADD PRIMARY KEY (InventoryID);
-
---Clés étrangères
-ALTER TABLE I_Fact_Inventory
-ADD CONSTRAINT FK_InventoryDate FOREIGN KEY (DateID) REFERENCES I_Dates(DateID);
-
-ALTER TABLE I_Fact_Inventory
-ADD CONSTRAINT FK_InventoryProduct FOREIGN KEY(ProductID) REFERENCES I_Products (ProductID);
-
-ALTER TABLE I_Fact_Inventory
-ADD CONSTRAINT FK_InventorySpplier FOREIGN KEY (SupplierID) REFERENCES I_Suppliers (SupplierID);
+--Partitionnement
 
