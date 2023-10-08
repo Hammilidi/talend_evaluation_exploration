@@ -54,8 +54,6 @@ ADD CONSTRAINT FK_SalesCustomer FOREIGN KEY (CustomerID) REFERENCES S_Customers(
 ALTER TABLE S_Fact_Sales
 ADD CONSTRAINT FK_SalesProduct FOREIGN KEY (ProductID) REFERENCES S_Products(ProductID);
 
-
-
 --Optimisations
 --Indexation
 

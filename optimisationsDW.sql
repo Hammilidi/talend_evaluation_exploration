@@ -30,15 +30,15 @@ AS RANGE LEFT FOR VALUES
 --Schéma de partition
 CREATE PARTITION SCHEME PS_FactSalesDate
 AS PARTITION PF_FactSalesDate 
-TO ([PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY]);
+TO ([PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY]);
 
 --Supprimer la contrainte de clé primaire
 ALTER TABLE Fact_Sales
-DROP CONSTRAINT [PK_Fact_Sales]; -- Supprimez la contrainte de clé primaire existante
+DROP CONSTRAINT [PK__Fact_Sal__1EE3C41FB8688C81]; -- Supprimez la contrainte de clé primaire existante
 
 --Définition d'une nouvelle clé primaire
 ALTER TABLE Fact_Sales
-ADD CONSTRAINT [PK_Fact_Sales] PRIMARY KEY (SaleID, FactDate)
+ADD CONSTRAINT [PK_Fact_Sales] PRIMARY KEY (SaleID, DateID)
 ON PS_FactSalesDate(FactDate); -- Utilisez FactDate pour le partitionnement
 
 
