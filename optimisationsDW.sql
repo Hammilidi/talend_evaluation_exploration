@@ -1,4 +1,70 @@
 --Datawarehouse 
+USE SprintTalendDW;
+
+--Non Clustered Index
+CREATE NONCLUSTERED INDEX IX_TotalAmount
+ON Fact_Sales (TotalAmount);
+
+CREATE NONCLUSTERED INDEX IX_NetAmount
+ON Fact_Sales (NetAmount);
+
+CREATE NONCLUSTERED INDEX IX_StockReceived
+ON Fact_Inventory (StockReceived);
+
+CREATE NONCLUSTERED INDEX IX_StockSold
+ON Fact_Inventory (StockSold);
+
+CREATE NONCLUSTERED INDEX Ix_StockOnHand
+ON Fact_Inventory (StockOnHand);
+
+--Partitionnement
+--Ajouter la colonne Date
+ALTER TABLE Fact_Sales
+ADD FactDate DATE;
+
+--Fonction de partition
+CREATE PARTITION FUNCTION PF_FactSalesDate (DATE)
+AS RANGE LEFT FOR VALUES 
+    ('2021-09-28', '2021-12-28', '2022-03-28', '2022-06-28', '2022-09-28', '2022-12-28', '2023-03-28', '2023-06-28', '2023-09-28');
+
+--Schéma de partition
+CREATE PARTITION SCHEME PS_FactSalesDate
+AS PARTITION PF_FactSalesDate 
+TO ([PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY], [PRIMARY]);
+
+--Supprimer la contrainte de clé primaire
+ALTER TABLE Fact_Sales
+DROP CONSTRAINT [PK_Fact_Sales]; -- Supprimez la contrainte de clé primaire existante
+
+--Définition d'une nouvelle clé primaire
+ALTER TABLE Fact_Sales
+ADD CONSTRAINT [PK_Fact_Sales] PRIMARY KEY (SaleID, FactDate)
+ON PS_FactSalesDate(FactDate); -- Utilisez FactDate pour le partitionnement
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 --SalesDataMart
@@ -6,7 +72,6 @@ USE SalesDataMart;
 
 SELECT MAX(Date) as M_Date, MIN(Date) as m_Date FROM S_Dates;
 --Indexation
-
 
 
 --Partitionnement
